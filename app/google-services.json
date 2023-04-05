@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "70613252929",
+    "project_id": "offline-first-app",
+    "storage_bucket": "offline-first-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70613252929:android:bc08a83b12a653025a7fc0",
+        "android_client_info": {
+          "package_name": "com.example.offlinefirsttodoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "70613252929-2ilme7mlfer6etr7clmj8k8kb6g3o24m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.offlinefirsttodoapp",
+            "certificate_hash": "b2ae30644cabdb24c887b7a1c254edb49b661bc7"
+          }
+        },
+        {
+          "client_id": "70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlK3tjeDkZxe826hk0bYv3Y2QU4GRzJYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

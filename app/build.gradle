@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -18,6 +21,14 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                compilerArgumentProviders(
+                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
+                )
+            }
+        }
     }
 
     buildTypes {
@@ -27,8 +38,9 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -37,13 +49,18 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.1'
+        kotlinCompilerExtensionVersion '1.4.4'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+}
+
+kapt {
+    correctErrorTypes true
 }
 
 dependencies {
@@ -53,10 +70,60 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.compose.material3:material3:1.1.0-alpha05'
+    implementation 'androidx.compose.material3:material3:1.1.0-beta01'
+    implementation "androidx.compose.material:material:1.3.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+
+    // firebase authentication
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+
+    // coil
+    implementation 'io.coil-kt:coil-compose:2.3.0'
+
+
+    // DATE TIME
+
+    // Compose-motion-core
+    implementation "io.github.fornewid:material-motion-compose-core:0.11.0-alpha"
+    implementation "io.github.fornewid:material-motion-compose-navigation:0.11.0-alpha"
 
     // Compose-Navigation dependencies
     implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    // Hilt
+    implementation 'com.google.dagger:hilt-android:2.44.2'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    kapt 'com.google.dagger:hilt-compiler:2.44.2'
+    // For instrumentation tests -- Hilt
+    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.44.2'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.44.2'
+    // For local unit tests -- Hilt
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
+    kaptTest 'com.google.dagger:hilt-compiler:2.44.2'
+
+    // Room dependencies
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-guava:$room_version"
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    // Compose Dialogs
+    implementation "com.maxkeppeler.sheets-compose-dialogs:core:1.1.0"
+    // CALENDAR
+    implementation "com.maxkeppeler.sheets-compose-dialogs:calendar:1.1.0"
+    // CLOCK
+    implementation "com.maxkeppeler.sheets-compose-dialogs:clock:1.1.0"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -64,4 +131,21 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+}
+
+class RoomSchemaArgProvider implements CommandLineArgumentProvider {
+
+    @InputDirectory
+    @PathSensitive(PathSensitivity.RELATIVE)
+    File schemaDir
+
+    RoomSchemaArgProvider(File schemaDir) {
+        this.schemaDir = schemaDir
+    }
+
+    @Override
+    Iterable<String> asArguments() {
+        return ["-Aroom.schemaLocation=${schemaDir.path}".toString()]
+    }
+
 }

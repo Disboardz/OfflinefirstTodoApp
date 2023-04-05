@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.OfflinefirstTodoApp.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#000000</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_baseline_note_alt_24_dark</item>
+        <item name="postSplashScreenTheme">@style/Theme.OfflinefirstTodoApp</item>
+    </style>
+</resources>

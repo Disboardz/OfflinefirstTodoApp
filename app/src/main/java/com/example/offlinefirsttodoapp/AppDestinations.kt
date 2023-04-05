@@ -1,22 +1,23 @@
 package com.example.offlinefirsttodoapp
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 interface AppDestinations {
     val route: String
 }
 
-object Home: AppDestinations {
+object HomeDestination : AppDestinations {
     override val route: String
         get() = "home"
 }
 
-object Details: AppDestinations {
+object TaskDestination : AppDestinations {
     override val route: String
-        get() = "details"
-}
+        get() = "taskDetails/{taskId}"
+    val arguments = listOf(navArgument("taskId") { type = NavType.IntType })
 
-object Login: AppDestinations {
-    override val route: String
-        get() = "login"
+    fun toNavigate(id: Int): String {
+        return "taskDetails/${id}"
+    }
 }
-
-val appDestinationsScreens = listOf<AppDestinations>(Home, Details, Login)

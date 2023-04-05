@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">OfflinefirstTodoApp</string>
+    <string name="menu_icon">Menu</string>
+    <string name="more_vert">More information</string>
+    <string name="add_icon">Add task</string>
+    <string name="home_title">Tasks</string>
+    <string name="empty_task_title">No tasks yet</string>
+    <string name="empty_task_desc">Add your to-dos and keep track of them across Google Workspace</string>
+    <string name="starred">Starred</string>
+    <string name="new_list">New list</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sort_by_myorder">My order</string>
+    <string name="sort_by_date">Date</string>
+    <string name="sort_by_starred">Starred recently</string>
+    <string name="rename_list">Rename list</string>
+    <string name="delete_list">Delete list</string>
+    <string name="delete_completed_task">Delete all completed tasks</string>
+    <string name="create_new_list">Create new list</string>
+    <string name="create_list_placeholder">Enter list name</string>
+    <string name="done">Done</string>
+    <string name="save">Save</string>
+    <string name="new_task">New task</string>
+    <string name="details">Details</string>
+    <string name="back_icon">Go back screen</string>
+    <string name="delete_icon">Delete action</string>
+    <string name="oauth_client_id">70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com</string>
 </resources>
