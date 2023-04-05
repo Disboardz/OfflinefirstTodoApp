@@ -25,6 +25,8 @@ import com.example.offlinefirsttodoapp.ui.screens.home.HomeViewModel
 import com.example.offlinefirsttodoapp.ui.screens.login.Login
 import com.example.offlinefirsttodoapp.ui.screens.taskDetails.TaskDetails
 import com.example.offlinefirsttodoapp.ui.theme.OfflinefirstTodoAppTheme
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+//        Firebase.auth.useEmulator("10.0.2.2", 9099)
         var keepSplashScreenOpen = true
         installSplashScreen().apply {
             setKeepOnScreenCondition {
@@ -68,8 +71,16 @@ fun App(
                 when (event) {
                     Lifecycle.Event.ON_CREATE -> {
                         coroutineScope.launch {
-                            delay(200)
-                            closeSplashScreen()
+                            val user = Firebase.auth.currentUser
+                            if (user != null) {
+                                navController.navigate("main") {
+                                    popUpTo("login") {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                                delay(200)
+                                closeSplashScreen()
                         }
                     }
                     else -> {}
@@ -110,6 +121,13 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
                             taskId
                         )
                     )
+                },
+                navigateToLogin = {
+                    navController.navigate("authentication") {
+                        popUpTo("main") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -136,11 +154,7 @@ fun NavGraphBuilder.mainGraph(navController: NavController) {
 fun NavGraphBuilder.loginGraph(navController: NavController) {
     navigation(startDestination = "login", route = "authentication") {
         composable(route = "login", enterTransition = { fadeIn() }, exitTransition = { fadeOut() }) {
-            Login(goToMainScreen = { navController.navigate("main") {
-                popUpTo("authentication") {
-                    inclusive = true
-                }
-            } })
+            Login(navigate = navController::navigate)
         }
     }
 }

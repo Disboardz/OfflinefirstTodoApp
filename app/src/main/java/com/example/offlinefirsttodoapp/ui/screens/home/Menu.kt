@@ -45,7 +45,7 @@ fun Menu(
                 .weight(1f, false)
         ) {
             ListItem(
-                headlineText = {
+                headlineContent = {
                     Text(
                         text = stringResource(id = R.string.starred),
                         fontWeight = FontWeight.W500
@@ -75,7 +75,7 @@ fun Menu(
             taskList.forEachIndexed { i, item ->
                 if (item.taskList.title == "starred") return@forEachIndexed
                 ListItem(
-                    headlineText = {
+                    headlineContent = {
                         Text(
                             text = item.taskList.title,
                             modifier = Modifier.padding(start = 35.dp)
@@ -100,7 +100,7 @@ fun Menu(
         }
         Divider(Modifier.padding(vertical = 10.dp))
         ListItem(
-            headlineText = {
+            headlineContent = {
                 Text(
                     text = stringResource(id = R.string.new_list),
                     fontWeight = FontWeight.W500

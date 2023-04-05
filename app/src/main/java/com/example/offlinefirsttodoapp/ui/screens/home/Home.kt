@@ -3,8 +3,12 @@ package com.example.offlinefirsttodoapp.ui.screens.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
@@ -14,6 +18,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -23,29 +28,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import coil.compose.AsyncImage
 import com.example.offlinefirsttodoapp.R
 import com.example.offlinefirsttodoapp.ui.components.BottomBar
 import com.example.offlinefirsttodoapp.ui.components.TabList
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import com.example.offlinefirsttodoapp.ui.theme.LocalSpacing
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 enum class HomeSheetType {
-    MENU,
-    LIST_OPTIONS,
-    CREATE_TASK,
-    NONE
+    MENU, LIST_OPTIONS, CREATE_TASK, NONE
 }
 
 @OptIn(
-    ExperimentalPagerApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
+    ExperimentalFoundationApi::class,
 )
 @Composable
 fun Home(
     navigateToTaskDetails: (taskId: Int) -> Unit,
+    navigateToLogin: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val systemUiController = rememberSystemUiController()
@@ -64,8 +67,7 @@ fun Home(
 
     LaunchedEffect(Unit) {
         systemUiController.setSystemBarsColor(
-            color = systemBarColor,
-            darkIcons = useDarkIcons
+            color = systemBarColor, darkIcons = useDarkIcons
         )
     }
 
@@ -79,8 +81,9 @@ fun Home(
         val observer = LifecycleEventObserver { _: LifecycleOwner, event: Lifecycle.Event ->
             when (event) {
                 Lifecycle.Event.ON_CREATE -> {
-                    if (state.currentPage != pagerState.currentPage) {
-                        coroutineScope.launch { pagerState.animateScrollToPage(state.currentPage) }
+                        coroutineScope.launch {
+                            delay(200)
+                            pagerState.animateScrollToPage(1)
                     }
                 }
                 else -> {}
@@ -154,15 +157,14 @@ fun Home(
             ModalBottomSheetLayout(
                 sheetBackgroundColor = MaterialTheme.colorScheme.background,
                 sheetState = bottomSheetState,
+                modifier = Modifier.navigationBarsPadding(),
                 sheetContent = {
                     when (sheetType) {
                         HomeSheetType.MENU -> {
-                            Menu(
-                                taskList = state.taskList,
+                            Menu(taskList = state.taskList,
                                 page = pagerState.currentPage,
                                 changePage = { page -> changePage(page, true) },
-                                onNavigateToCreateList = { onNavigateToCreateList(true) }
-                            )
+                                onNavigateToCreateList = { onNavigateToCreateList(true) })
                         }
                         HomeSheetType.LIST_OPTIONS -> {
                             ListOptions(
@@ -172,11 +174,13 @@ fun Home(
                             )
                         }
                         HomeSheetType.CREATE_TASK -> {
-                            CreateTaskSheet(createTask = viewModel::createTask, focusRequester, toggleSheet = {
-                                coroutineScope.launch {
-                                    bottomSheetState.hide()
-                                }
-                            })
+                            CreateTaskSheet(createTask = viewModel::createTask,
+                                focusRequester,
+                                toggleSheet = {
+                                    coroutineScope.launch {
+                                        bottomSheetState.hide()
+                                    }
+                                })
                         }
                         HomeSheetType.NONE -> {
                             Box(
@@ -191,20 +195,31 @@ fun Home(
                 },
                 sheetShape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
             ) {
-                Scaffold(
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                Scaffold(modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                     containerColor = MaterialTheme.colorScheme.background,
                     topBar = {
-                        CenterAlignedTopAppBar(
-                            title = {
-                                Text(text = stringResource(id = R.string.home_title))
-                            },
-                            scrollBehavior = scrollBehavior
-                        )
+                        CenterAlignedTopAppBar(title = {
+                            Text(text = stringResource(id = R.string.home_title))
+                        }, scrollBehavior = scrollBehavior, actions = {
+                            Row(modifier = Modifier.padding(end = LocalSpacing.current.small)) {
+                                AsyncImage(model = state.user?.photoUrl ?: "",
+                                    contentDescription = "Profile image",
+                                    modifier = Modifier
+                                        .clip(MaterialTheme.shapes.large)
+                                        .clickable {
+                                            viewModel.signOut()
+                                            navigateToLogin()
+                                        }
+
+                                )
+                            }
+                        })
                     },
-                    bottomBar = { BottomBar(showSheet = { type ->
-                        showSheet(type)
-                    }) },
+                    bottomBar = {
+                        BottomBar(showSheet = { type ->
+                            showSheet(type)
+                        })
+                    },
                     content = { contentPadding ->
                         Column(
                             Modifier
@@ -221,9 +236,9 @@ fun Home(
                                     openCreateList = viewModel::toggleModal
                                 )
                                 HorizontalPager(
-                                    count = state.taskList.size,
+                                    pageCount = state.taskList.size,
                                     state = pagerState,
-                                    modifier = Modifier.weight(1f)
+//                                    modifier = Modifier.weight(1f)
                                 ) { page ->
                                     Page(
                                         data = state.taskList[page].tasks,
@@ -233,13 +248,11 @@ fun Home(
                                 }
                             }
                         }
-                    }
-                )
+                    })
             }
         } else {
             CreateTaskList(
-                dismiss = viewModel::toggleModal,
-                createTaskList = ::createList
+                dismiss = viewModel::toggleModal, createTaskList = ::createList
             )
         }
     }

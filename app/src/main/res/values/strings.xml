@@ -23,4 +23,5 @@
     <string name="details">Details</string>
     <string name="back_icon">Go back screen</string>
     <string name="delete_icon">Delete action</string>
+    <string name="oauth_client_id">70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com</string>
 </resources>

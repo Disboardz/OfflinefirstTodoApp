@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "70613252929-jpgp2i14g62m3b98605if3pnvfm0no1m.apps.googleusercontent.com",
+          "client_id": "70613252929-2ilme7mlfer6etr7clmj8k8kb6g3o24m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.offlinefirsttodoapp",
+            "certificate_hash": "b2ae30644cabdb24c887b7a1c254edb49b661bc7"
+          }
+        },
+        {
+          "client_id": "70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "70613252929-jpgp2i14g62m3b98605if3pnvfm0no1m.apps.googleusercontent.com",
+              "client_id": "70613252929-0mjajk1mp46go5mr9cio9lpcm54h1jov.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

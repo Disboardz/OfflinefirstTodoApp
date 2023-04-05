@@ -1,6 +1,8 @@
 package com.example.offlinefirsttodoapp.di
 
+import com.example.offlinefirsttodoapp.data.repository.FirebaseAuthRepositoryImpl
 import com.example.offlinefirsttodoapp.data.repository.TaskRepositoryImpl
+import com.example.offlinefirsttodoapp.domain.repository.FirebaseAuthRepository
 import com.example.offlinefirsttodoapp.domain.repository.TasksRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,11 @@ abstract class RepositoryModule {
     abstract fun bindTaskRepository(
         taskRepositoryImpl: TaskRepositoryImpl
     ): TasksRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFirebaseAuthRepository(
+        firebaseAuthRepositoryImpl: FirebaseAuthRepositoryImpl
+    ): FirebaseAuthRepository
+
 }

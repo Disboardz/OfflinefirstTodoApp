@@ -7,13 +7,14 @@ import com.example.offlinefirsttodoapp.data.local.entities.TaskListEntity
 import com.example.offlinefirsttodoapp.data.mapper.toTaskListEntity
 import com.example.offlinefirsttodoapp.domain.models.Task
 import com.example.offlinefirsttodoapp.domain.models.TaskListWithTasks
+import com.example.offlinefirsttodoapp.domain.repository.FirebaseAuthRepository
 import com.example.offlinefirsttodoapp.domain.repository.TasksRepository
 import com.example.offlinefirsttodoapp.utils.Resource
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -21,13 +22,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: TasksRepository
+    private val repository: TasksRepository,
+    private val authRepository: FirebaseAuthRepository
 ) : ViewModel() {
     private var _state = MutableStateFlow(HomeViewModelState())
     val state = _state.asStateFlow()
 
     init {
         getTaskList(true, page = 1)
+        _state.update { state -> state.copy(user = authRepository.getUser()) }
     }
 
     private fun getTaskList(init: Boolean = false, refreshing: Boolean = false, page: Int? = null) {
@@ -151,6 +154,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    fun signOut() {
+        authRepository.signOut()
+    }
 }
 
 data class HomeViewModelState(
@@ -158,5 +165,6 @@ data class HomeViewModelState(
     val refreshing: Boolean = false,
     val error: Boolean = false,
     val showModal: Boolean = false,
-    val currentPage: Int = 0
+    val currentPage: Int = 0,
+    val user: FirebaseUser? = null
 )

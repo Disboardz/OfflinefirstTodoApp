@@ -60,7 +60,6 @@ fun CreateTaskSheet(
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
-            .navigationBarsPadding()
             .imePadding()
             .animateContentSize()
     ) {
@@ -155,6 +154,9 @@ fun CreateTaskSheet(
                 focusManager.clearFocus()
                 createTask(task.text, taskDetails.text, selectedDate) {
                     toggleSheet()
+                    task = task.copy(text = "")
+                    taskDetails = taskDetails.copy(text = "")
+                    selectedDate = null
                 }
             }, enabled = enabled) {
                 Text(

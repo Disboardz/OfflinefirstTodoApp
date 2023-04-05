@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -18,7 +18,7 @@ import com.example.offlinefirsttodoapp.R
 import com.example.offlinefirsttodoapp.domain.models.OrderListOption
 import com.example.offlinefirsttodoapp.domain.models.TaskListWithTasks
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun ListOptions(
     modifier: Modifier = Modifier,
@@ -32,7 +32,6 @@ fun ListOptions(
         OrderListOption.MY_ORDER -> stringResource(id = R.string.sort_by)
         OrderListOption.DATE -> stringResource(id = R.string.sort_by_date)
         OrderListOption.STARRED -> stringResource(id = R.string.sort_by_starred)
-        else -> stringResource(id = R.string.sort_by)
     }
 
     val deleteEnabled = list.taskList.canDelete
@@ -43,8 +42,8 @@ fun ListOptions(
             .navigationBarsPadding()
     ) {
         ListItem(
-            headlineText = { Text(text = stringResource(id = R.string.sort_by)) },
-            supportingText = { Text(text = supportText) },
+            headlineContent = { Text(text = stringResource(id = R.string.sort_by)) },
+            supportingContent = { Text(text = supportText) },
             modifier = Modifier
                 .padding(start = 5.dp)
                 .clickable(onClick = {})
@@ -52,19 +51,19 @@ fun ListOptions(
         Divider()
         Column(modifier = Modifier.padding(start = 5.dp)) {
             ListItem(
-                headlineText = { Text(text = stringResource(id = R.string.rename_list)) },
+                headlineContent = { Text(text = stringResource(id = R.string.rename_list)) },
                 modifier = Modifier.clickable(onClick = {})
             )
             ListItem(
-                headlineText = { Text(text = stringResource(id = R.string.delete_list)) },
+                headlineContent = { Text(text = stringResource(id = R.string.delete_list)) },
                 modifier = Modifier.clickable(
                     onClick = deleteList,
-                    enabled = deleteEnabled == true
+                    enabled = deleteEnabled
                 ),
-                colors = ListItemDefaults.colors(headlineColor = if (deleteEnabled) MaterialTheme.colorScheme.onBackground else Color.Gray)
+                colors = androidx.compose.material3.ListItemDefaults.colors(headlineColor = if (deleteEnabled) MaterialTheme.colorScheme.onBackground else Color.Gray)
             )
             ListItem(
-                headlineText = { Text(text = stringResource(id = R.string.delete_completed_task)) },
+                headlineContent = { Text(text = stringResource(id = R.string.delete_completed_task)) },
                 modifier = Modifier.clickable(onClick = {})
             )
         }
